@@ -1,4 +1,4 @@
-# My Python repo
+# species-attribution for GSAT change for emissions scenarios
 <!--- Adding a one-line description of what this repository is for here may be
 helpful -->
 <!---
