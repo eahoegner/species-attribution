@@ -7,6 +7,11 @@ dependencies = [
     "pre-commit>=3.3.1",
     "jupyterlab>=4.0.0",
     "jupytext>=1.15.2",
+    "pandas-openscm>=0.9.2",
+    "gcages>=0.14.0",
+    "pandas-indexing>=0.6.3",
+    "openscm-units>=0.6.3",
+    "scmdata>=0.19.0",
 ]
 name = "local"
 version = "0.1.0"
