@@ -1,4 +1,4 @@
-# Species-attribution for ERF and GSAT change for emissions scenarios
+# Species-attribution for ERF and GSAT change for emissions scenarios using MAGICC
 
 This repository decomposes the Effective Radiative Forcing (ERF) and Global Surface Air Temperature Change (GSAT) for the CMIP7 ScenarioMIP scenarios assessed with the reduced complexity climate model MAGICCv7.6.0a3 into its contributions by different forcing agents. It further provides a decomposition of ERF and GSAT change from Tropospheric Ozone and Stratospheric Water Vapor into contributions from respective precursor-species (CH4, CO, NOx, VOC), and vice versa, the decomposition of effective ERF and GSAT change from CH4 and NOx into their respective channels (for CH4: CH4, F-Gases, Montreal Protocol Halogens, stratospheric H2O, tropospheric Ozone; for NOx: Aerosols direct and indirect, CH4, N2O, stratospheric H2O and tropospheric Ozone). 
 
