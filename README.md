@@ -10,10 +10,12 @@ Creates the climate assessment plots for the paper "The role of non-CO2 greenhou
 This repo requires the historical emissions for CMIP7 ScenarioMIP emissions harmonisation, available at:
 <https://zenodo.org/records/17845154>
 
-Use the `global-workflow-xxx.csv`.
+Use the `global-workflow-xxx.csv`. 
+
+The full workflow can be run with history only. Save the history file to `input_files`. Set `embargoed=False` in all notebooks. Results will be written to `data`, and plots to `data/plots`.
 
 
-It further requires scenario-data from ScenarioMIP CMIP7, which is currently still under embargo, will be available at:
+For running scenarios, it requires scenario-data from ScenarioMIP CMIP7, which is currently still under embargo, will be available at:
 <https://zenodo.org/records/19825038>
 
 Access can be requested per the instructions.
