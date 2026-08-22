@@ -221,7 +221,7 @@ db.save(scenarios_with_counterfactuals, groupby=DB_GROUPBY_COLUMNS, allow_overwr
 # Written next to OUT_DB_DIR so it inherits the same EMBARGOED-gated location.
 
 # %%
-base_scenarios = sorted(scenarios.index.get_level_values("scenario").unique())
+base_scenarios = sorted(combined.index.get_level_values("scenario").unique())
 BASE_SCENARIOS_FILE = DATA_DIR / "base_scenarios.json"
 BASE_SCENARIOS_FILE.write_text(json.dumps(base_scenarios, indent=2))
 

@@ -98,17 +98,30 @@ def load_base_scenarios(data_dir, fallback=("historical",)):
 
 
 SCENARIO_METADATA = {
-    "vl": {"model": "REMIND-MAgPIE 3.5-4.11", "scenario": "SSP1 - Very Low Emissions", "version": 5},
-    "ln": {"model": "AIM 3.0", "scenario": "SSP2 - Low Overshoot_a", "version": 23},
-    "l": {"model": "MESSAGEix-GLOBIOM-GAINS 2.1-M-R12", "scenario": "SSP2 - Low Emissions", "version": 21},
-    "ml": {"model": "COFFEE 1.6", "scenario": "SSP2 - Medium-Low Emissions", "version": 14},
-    "m": {"model": "IMAGE 3.4", "scenario": "SSP2 - Medium Emissions", "version": 25},
-    "hl": {"model": "WITCH 6.0", "scenario": "SSP5 - Medium-Low Emissions_a", "version": 32},
-    "h": {"model": "GCAM 8s", "scenario": "SSP3 - High Emissions", "version": 3},
+    "VL": {"model": "REMIND-MAgPIE 3.5-4.11", "scenario": "SSP1 - Very Low Emissions", "version": 5},
+    "LN": {"model": "AIM 3.0", "scenario": "SSP2 - Low Overshoot_a", "version": 23},
+    "L": {"model": "MESSAGEix-GLOBIOM-GAINS 2.1-M-R12", "scenario": "SSP2 - Low Emissions", "version": 21},
+    "ML": {"model": "COFFEE 1.6", "scenario": "SSP2 - Medium-Low Emissions", "version": 14},
+    "M": {"model": "IMAGE 3.4", "scenario": "SSP2 - Medium Emissions", "version": 25},
+    "HL": {"model": "WITCH 6.0", "scenario": "SSP5 - Medium-Low Emissions_a", "version": 32},
+    "H": {"model": "GCAM 8s", "scenario": "SSP3 - High Emissions", "version": 3},
 }
 """Marker-scenario metadata (model, long scenario name, version), keyed by short code."""
 
 SCENARIO_LONG_TO_SHORT = {v["scenario"]: k for k, v in SCENARIO_METADATA.items()}
+
+SCENARIO_COLORS = {
+    "H": "#8b0000",
+    "HL": "#c51c8a",
+    "M": "#fe6f6f",
+    "ML": "#b283a3",
+    "L": "#6495ec",
+    "LN": "#ff8c00",
+    "VL": "#6b8e22",
+}
+"""Fixed per-scenario colors, keyed by short code, matching the convention used for
+these marker scenarios in plots outside this repo - same scenario, same color,
+everywhere."""
 
 
 def scenario_short_name(base_scenario):
@@ -116,6 +129,18 @@ def scenario_short_name(base_scenario):
     never for constructing scenario-name keys. Falls back to the long name itself if not
     found in `SCENARIO_METADATA`."""
     return SCENARIO_LONG_TO_SHORT.get(base_scenario, base_scenario)
+
+
+def scenario_display_label(base_scenario):
+    """"SHORT - SSPn" label (e.g. "L - SSP2") for plot titles/legends/annotations -
+    matches the convention used for these marker scenarios outside this repo. Falls back
+    to `scenario_short_name` if not found in `SCENARIO_METADATA`."""
+    short = scenario_short_name(base_scenario)
+    meta = SCENARIO_METADATA.get(short)
+    if meta is None:
+        return short
+    ssp = meta["scenario"].split(" - ")[0]
+    return f"{short} - {ssp}"
 
 
 def load_scenarios(scenario_names, scenarios_db_dir):
@@ -714,6 +739,7 @@ def plot_scenario_year_stacked_bars(
     within_gap=0.15,
     group_spacing=0.6,
     ylim=None,
+    scenario_labels=None,
 ):
     """Condensed cross-scenario summary plot: one bar group per scenario, one stacked
     bar per year within each group, plus overlay reference markers (e.g. a directly-run
@@ -727,8 +753,11 @@ def plot_scenario_year_stacked_bars(
     `reference_markers`: list of dicts, each `{"label", "values": dict[(scenario, year)
     -> float], "marker", "facecolor"/"color", "edgecolor"}` - drawn as overlay scatter
     points, distinguished by marker shape.
-    `scenario_order`/`years`: left-to-right ordering for groups/sub-bars. Pass
-    already-display-ready labels in `scenario_order` for the x-axis.
+    `scenario_order`/`years`: left-to-right ordering for groups/sub-bars - also the keys
+    used to look up `bucket_values`/`reference_markers` entries, so must match whatever
+    keyed those dicts.
+    `scenario_labels`: display text for the x-axis annotation under each group, in the
+    same order as `scenario_order` - defaults to `scenario_order` itself if not given.
     `ylim`: optional (ymin, ymax) to use verbatim instead of the auto-padded autoscale."""
     fig, ax = plt.subplots(figsize=(max(6, 1.4 * len(scenario_order)), 5), constrained_layout=True)
 
@@ -816,9 +845,10 @@ def plot_scenario_year_stacked_bars(
     group_centers = [
         i * (group_span + group_spacing) + (group_span - bar_width) / 2 for i in range(len(scenario_order))
     ]
-    for center, scenario in zip(group_centers, scenario_order):
+    labels = scenario_labels if scenario_labels is not None else scenario_order
+    for center, label in zip(group_centers, labels):
         ax.annotate(
-            str(scenario), xy=(center, 0), xycoords=("data", "axes fraction"),
+            str(label), xy=(center, 0), xycoords=("data", "axes fraction"),
             xytext=(0, -32), textcoords="offset points", ha="center", va="top",
             fontsize=11, color=COLOR_PRIMARY_TEXT,
         )

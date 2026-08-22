@@ -62,10 +62,10 @@ SCENARIOS = ac.load_base_scenarios(DATA_DIR)
 ["historical"] if 001 hasn't been run yet."""
 COMBINED_LABEL = "Combined"
 
-SCENARIO_COLORS = dict(zip((ac.scenario_short_name(s) for s in SCENARIOS), ac.CATEGORICAL_PALETTE))
-"""Fixed categorical color assignment for visual consistency - used below
+SCENARIO_COLORS = ac.SCENARIO_COLORS
+"""Fixed per-scenario color assignment for visual consistency - used below
 to color each scenario's own "Total" bar in the bar charts, matching that
-scenario's color in other plots."""
+scenario's color in other plots (and outside this repo)."""
 
 FORCING_CATEGORIES = {
     "CO2": "Effective Radiative Forcing|CO2",
@@ -222,7 +222,7 @@ def summarize_base_scenario(base_scenario):
     combined_stats = ac.distribution_summary(combined_series)
     total_stats = ac.distribution_summary(total_gsat_series)
 
-    print(f"=== {ac.scenario_short_name(base_scenario)} ({YEAR}) ===")
+    print(f"=== {ac.scenario_display_label(base_scenario)} ({YEAR}) ===")
     print(summary)
     print()
     print("Additivity residual (sum of isolated channels - Combined QEXTRA run), per member:")
@@ -294,7 +294,7 @@ def summarize_base_scenario(base_scenario):
             },
         ],
         years=PLOT_YEARS,
-        title=f"{ac.scenario_short_name(base_scenario)}: contributions by forcing agent (median, 17-83rd pct)",
+        title=f"{ac.scenario_display_label(base_scenario)}: contributions by forcing agent (median, 17-83rd pct)",
         out_path=PLOTS_DIR / f"{OUTPUT_PREFIX}burden_{base_scenario}_by_category_{years_label}.png",
         bucket_colors=bucket_colors,
         order=shared_order,

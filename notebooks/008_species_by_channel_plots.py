@@ -328,6 +328,7 @@ def fix_mixed_sign_legend_order(fig, ax, bucket_colors, bucket_values, reference
 
 
 scenario_order = [ac.scenario_short_name(s) for s in BASE_SCENARIOS]
+scenario_labels = [ac.scenario_display_label(s) for s in BASE_SCENARIOS]
 
 for species_key in SPECIES_CATEGORIES:
     reference_markers_values = species_reference_markers_values[species_key]
@@ -370,6 +371,7 @@ for species_key in SPECIES_CATEGORIES:
         bucket_colors=BUCKET_COLORS[species_key],
         reference_markers=reference_markers,
         scenario_order=scenario_order,
+        scenario_labels=scenario_labels,
         years=YEARS_TO_PLOT,
         title=f"Net {species_key}-attributable GSAT change by channel per scenario",
         ylabel=r"$\Delta$ GSAT (°C)",
@@ -469,6 +471,7 @@ for species_key in SPECIES_CATEGORIES:
         bucket_colors=BUCKET_COLORS[species_key],
         reference_markers=reference_markers_delta,
         scenario_order=scenario_order,
+        scenario_labels=scenario_labels,
         years=YEARS_TO_PLOT,
         title=rf"Net {species_key}-attributable $\Delta$ GSAT change by channel per scenario relative to 2025",
         ylabel=r"$\Delta$ GSAT (°C)",

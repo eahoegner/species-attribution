@@ -52,26 +52,6 @@ logging.getLogger("pymagicc").setLevel(logging.ERROR)
 
 os.environ["MAGICC_EXECUTABLE_7"] = str(ac.MAGICC_EXECUTABLE_PATH)
 
-# %%
-SCENARIO_METADATA = {
-    "vl": {"model": "REMIND-MAgPIE 3.5-4.11", "scenario": "SSP1 - Very Low Emissions", "version": 5},
-    "ln": {"model": "AIM 3.0", "scenario": "SSP2 - Low Overshoot_a", "version": 23},
-    "l": {"model": "MESSAGEix-GLOBIOM-GAINS 2.1-M-R12", "scenario": "SSP2 - Low Emissions", "version": 21},
-    "ml": {"model": "COFFEE 1.6", "scenario": "SSP2 - Medium-Low Emissions", "version": 14},
-    "m": {"model": "IMAGE 3.4", "scenario": "SSP2 - Medium Emissions", "version": 25},
-    "hl": {"model": "WITCH 6.0", "scenario": "SSP5 - Medium-Low Emissions_a", "version": 32},
-    "h": {"model": "GCAM 8s", "scenario": "SSP3 - High Emissions", "version": 3},
-}
-SCENARIO_LONG_TO_SHORT = {v["scenario"]: k for k, v in SCENARIO_METADATA.items()}
-
-def scenario_short_name(base_scenario):
-    """Human-readable short code for a long scenario name - for print/plot text only,
-    never for constructing actual scenario-name keys (those still need the real long
-    name to match what's in the data). Falls back to the long name itself if not found
-    (e.g. "historical", or anything not in SCENARIO_METADATA)."""
-    return SCENARIO_LONG_TO_SHORT.get(base_scenario, base_scenario)
-
-
 # %% [markdown]
 # ## Configuration
 

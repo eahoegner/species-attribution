@@ -94,10 +94,9 @@ TIME_BLOCKS = [
 """(label, start_year, end_year) - start_year=None means "absolute value at end_year"
 (cumulative since 1750), otherwise "value at end_year minus value at start_year"."""
 
-SCENARIO_ORDER = [ac.scenario_short_name(s) for s in BASE_SCENARIOS]
-SCENARIO_COLORS = dict(zip(SCENARIO_ORDER, ac.CATEGORICAL_PALETTE))
-"""Same fixed categorical color assignment 005 uses, for visual consistency between
-notebooks - same scenario always means the same color."""
+SCENARIO_COLORS = ac.SCENARIO_COLORS
+"""Fixed per-scenario colors, for visual consistency between notebooks (and outside
+this repo) - same scenario always means the same color."""
 
 # %% [markdown]
 # ## Load shared data
@@ -233,7 +232,7 @@ for base_scenario in BASE_SCENARIOS:
         SCENARIO_COLORS[short_name],
         category_erf_matrix,
         total_erf_matrix,
-        title=f"ERF by category and period, {short_name} (median, 17-83rd pct)",
+        title=f"ERF by category and period, {ac.scenario_display_label(base_scenario)} (median, 17-83rd pct)",
         ylabel="ERF (W/m$^2$)",
         out_path=PLOTS_DIR / f"{OUTPUT_PREFIX}species_by_period_erf_{short_name}.png",
     )
@@ -250,7 +249,7 @@ for base_scenario in BASE_SCENARIOS:
         SCENARIO_COLORS[short_name],
         category_gsat_matrix,
         total_gsat_matrix,
-        title=f"GSAT contribution by category and period, {short_name}, rebased to 1850-1900 (median, 17-83rd pct)",
+        title=f"GSAT contribution by category and period, {ac.scenario_display_label(base_scenario)}, rebased to 1850-1900 (median, 17-83rd pct)",
         ylabel=r"$\Delta$ GSAT (°C)",
         out_path=PLOTS_DIR / f"{OUTPUT_PREFIX}species_by_period_gsat_{short_name}.png",
     )

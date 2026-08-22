@@ -247,6 +247,7 @@ def draw_stacked_waterfall(ax, stage_dicts):
 
 # %%
 scenario_short_names = [ac.scenario_short_name(s) for s in BASE_SCENARIOS]
+scenario_display_labels = [ac.scenario_display_label(s) for s in BASE_SCENARIOS]
 
 stage_values_by_scenario_category = {
     (short_name, category): stage_values(base_scenario, category)
@@ -293,7 +294,7 @@ def make_grid_plot(include_total, out_path):
             ]
             draw_stacked_waterfall(ax, stage_dicts)
 
-    for col, short_name in enumerate(scenario_short_names):
+    for col, display_label in enumerate(scenario_display_labels):
         # A plain `ax.set_title(..., pad=...)` would work for every column except col 0 -
         # matplotlib routes left/center/right titles through ONE shared offset transform
         # per axes (`_set_title_offset_trans`), reset on every `set_title()` call
@@ -302,7 +303,7 @@ def make_grid_plot(include_total, out_path):
         # that one shared axes. `annotate` sidesteps this entirely (its own independent
         # Text position), so its pad survives the category-label loop below.
         axes[0, col].annotate(
-            short_name, xy=(0.5, 1), xycoords="axes fraction", xytext=(0, 12), textcoords="offset points",
+            display_label, xy=(0.5, 1), xycoords="axes fraction", xytext=(0, 12), textcoords="offset points",
             ha="center", va="bottom", fontsize=11, color=ac.COLOR_PRIMARY_TEXT,
         )
 

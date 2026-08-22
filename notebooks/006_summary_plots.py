@@ -225,6 +225,7 @@ for base_scenario in BASE_SCENARIOS:
 
 # %%
 scenario_order = [ac.scenario_short_name(s) for s in BASE_SCENARIOS]
+scenario_labels = [ac.scenario_display_label(s) for s in BASE_SCENARIOS]
 
 reference_markers = [
     {
@@ -251,6 +252,7 @@ ac.plot_scenario_year_stacked_bars(
     bucket_colors=BUCKET_COLORS,
     reference_markers=reference_markers,
     scenario_order=scenario_order,
+    scenario_labels=scenario_labels,
     years=YEARS_TO_PLOT,
     title="Decomposition of GSAT change by forcing agent per scenario",
     ylabel=r"GSAT change relative to 1850-1900 (°C)",
@@ -329,6 +331,7 @@ ac.plot_scenario_year_stacked_bars(
     bucket_colors=BUCKET_COLORS,
     reference_markers=raw_reference_markers,
     scenario_order=scenario_order,
+    scenario_labels=scenario_labels,
     years=YEARS_TO_PLOT,
     title="Burden-based GSAT change contributions per scenario (raw, unrebased MAGICC output)",
     ylabel=r"$\Delta$ GSAT (°C), native MAGICC baseline",
@@ -400,6 +403,7 @@ ac.plot_scenario_year_stacked_bars(
     bucket_colors=BUCKET_COLORS,
     reference_markers=reference_markers_delta,
     scenario_order=scenario_order,
+    scenario_labels=scenario_labels,
     years=YEARS_TO_PLOT,
     ylim=(-0.8, 2.4),
     title=r"Decomposition of $\Delta$ GSAT change by forcing agent per scenario relative to 2025",
@@ -493,6 +497,7 @@ ac.plot_scenario_year_stacked_bars(
     bucket_colors=BUCKET_COLORS,
     reference_markers=erf_reference_markers,
     scenario_order=scenario_order,
+    scenario_labels=scenario_labels,
     years=YEARS_TO_PLOT,
     ylim=(-1.8,8.5),
     title="Decomposition of ERF by forcing agent per scenario",
@@ -558,6 +563,7 @@ ac.plot_scenario_year_stacked_bars(
     bucket_colors=BUCKET_COLORS,
     reference_markers=erf_reference_markers_delta,
     scenario_order=scenario_order,
+    scenario_labels=scenario_labels,
     years=YEARS_TO_PLOT,
     ylim=(-1.9,4.2),
     title=r"Decomposition of $\Delta$ ERF by forcing agent per scenario relative to 2025",

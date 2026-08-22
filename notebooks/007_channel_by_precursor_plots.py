@@ -241,6 +241,7 @@ for channel_label in CHANNELS_TO_DECOMPOSE:
 
 # %%
 scenario_order = [ac.scenario_short_name(s) for s in BASE_SCENARIOS]
+scenario_labels = [ac.scenario_display_label(s) for s in BASE_SCENARIOS]
 
 for channel_label, variable in CHANNELS_TO_DECOMPOSE.items():
     reference_markers_values = channel_reference_markers_values[channel_label]
@@ -269,6 +270,7 @@ for channel_label, variable in CHANNELS_TO_DECOMPOSE.items():
         bucket_colors=BUCKET_COLORS,
         reference_markers=reference_markers,
         scenario_order=scenario_order,
+        scenario_labels=scenario_labels,
         years=YEARS_TO_PLOT,
         title=f"{channel_label} ERF by precursor per scenario",
         ylabel="ERF (W/m$^2$)",
@@ -343,6 +345,7 @@ for channel_label, variable in CHANNELS_TO_DECOMPOSE.items():
         bucket_colors=BUCKET_COLORS,
         reference_markers=reference_markers_delta,
         scenario_order=scenario_order,
+        scenario_labels=scenario_labels,
         years=YEARS_TO_PLOT,
         title=rf"{channel_label} $\Delta$ ERF by precursor per scenario relative to 2025",
         ylabel=r"$\Delta$ ERF (W/m$^2$)",
@@ -439,6 +442,7 @@ for channel_label in CHANNELS_TO_DECOMPOSE:
         bucket_colors=BUCKET_COLORS,
         reference_markers=reference_markers_gsat,
         scenario_order=scenario_order,
+        scenario_labels=scenario_labels,
         years=YEARS_TO_PLOT,
         title=f"{channel_label} GSAT contribution by precursor per scenario",
         ylabel=r"$\Delta$ GSAT (°C)",
@@ -516,6 +520,7 @@ for channel_label in CHANNELS_TO_DECOMPOSE:
         bucket_colors=BUCKET_COLORS,
         reference_markers=reference_markers_gsat_delta,
         scenario_order=scenario_order,
+        scenario_labels=scenario_labels,
         years=YEARS_TO_PLOT,
         title=rf"{channel_label} $\Delta$ GSAT contribution by precursor per scenario relative to 2025",
         ylabel=r"$\Delta$ GSAT (°C)",
