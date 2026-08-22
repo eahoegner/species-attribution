@@ -4,16 +4,15 @@ This repository decomposes the Effective Radiative Forcing (ERF) and Global Surf
 
 Creates the climate assessment plots for the paper "The role of non-CO2 greenhouse gas emissions in future climate scenarios" (Harmsen et al., in prep.).
 
-
 ## Data inputs
 This repo requires the historical emissions for CMIP7 ScenarioMIP emissions harmonisation, available at:
-[https://zenodo.org/records/17845154]
+<https://zenodo.org/records/17845154>
 
 Use the `global-workflow-xxx.csv`.
 
 
 It further requires scenario-data from ScenarioMIP CMIP7, which is currently still under embargo, will be available at:
-[https://zenodo.org/records/19825038]
+<https://zenodo.org/records/19825038>
 
 Until then can be requested from the contacts given in the zenodo.
 
@@ -52,11 +51,6 @@ As another example, to run a notebook server, run
 ```sh
 uv run jupyter lab
 ```
-
-## Development
-
-Install and run instructions are the same as the above (this is a simple
-repository, without tests etc. so there are no development-only dependencies).
 
 ## Original template
 
