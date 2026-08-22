@@ -1,5 +1,10 @@
 data/*
-input_files/
+!data/plots/
+data/plots/*
+!data/plots/.gitkeep
+
+input_files/*
+!input_files/.gitkeep
 
 # Superseded/exploratory notebooks kept locally for reference, not published
 notebooks/archive/
