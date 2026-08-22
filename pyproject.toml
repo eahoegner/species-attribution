@@ -9,9 +9,13 @@ dependencies = [
     "jupytext>=1.15.2",
     "pandas-openscm>=0.9.2",
     "gcages>=0.14.0",
-    "pandas-indexing>=0.6.3",
     "openscm-units>=0.6.3",
     "scmdata>=0.19.0",
+    "matplotlib>=3.10.9",
+    "pymagicc>=2.1.5",
+    "openscm-runner>=0.13.0",
+    "setuptools>=83.0.0",
+    "pyarrow>=25.0.1",
 ]
 name = "local"
 version = "0.1.0"
@@ -20,6 +24,9 @@ readme = "README.md"
 
 [tool.uv]
 package = false
+
+[tool.uv.sources]
+gcages = { path = "/Users/hoegner/GitHub/gcages", editable = true }
 
 [tool.jupytext]
 formats = "ipynb,py:percent"

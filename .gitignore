@@ -1,0 +1,15 @@
+data/*
+input_files/
+
+# Superseded/exploratory notebooks kept locally for reference, not published
+notebooks/archive/
+
+# Reproducibility-investigation diagnostic scripts - kept locally, not published for now
+notebooks/repro_*.py
+
+notebooks/.ipynb_checkpoints/
+notebooks/__pycache__/
+
+CLAUDE.md
+
+.claude
