@@ -16,7 +16,9 @@ Use the `global-workflow-xxx.csv`.
 It further requires scenario-data from ScenarioMIP CMIP7, which is currently still under embargo, will be available at:
 <https://zenodo.org/records/19825038>
 
-Until then can be requested from the contacts given in the zenodo.
+Access can be requested per the instructions.
+
+Use the `infilled_{model}.csv` files.
 
 ## Installation
 
