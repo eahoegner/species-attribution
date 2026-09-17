@@ -111,13 +111,13 @@ SCENARIO_METADATA = {
 SCENARIO_LONG_TO_SHORT = {v["scenario"]: k for k, v in SCENARIO_METADATA.items()}
 
 SCENARIO_COLORS = {
-    "H": "#8b0000",
-    "HL": "#c51c8a",
-    "M": "#fe6f6f",
-    "ML": "#b283a3",
-    "L": "#6495ec",
-    "LN": "#ff8c00",
-    "VL": "#6b8e22",
+    "H": "#a41212",
+    "HL": "#E744F6",
+    "M": "#fc7b03",
+    "ML": "#dec820",
+    "L": "#20A359",
+    "LN": "#22e5db",
+    "VL": "#16188F",
 }
 """Fixed per-scenario colors, keyed by short code, matching the convention used for
 these marker scenarios in plots outside this repo - same scenario, same color,
@@ -132,15 +132,15 @@ def scenario_short_name(base_scenario):
 
 
 def scenario_display_label(base_scenario):
-    """"SHORT - SSPn" label (e.g. "L - SSP2") for plot titles/legends/annotations -
-    matches the convention used for these marker scenarios outside this repo. Falls back
-    to `scenario_short_name` if not found in `SCENARIO_METADATA`."""
+    """"SHORT-SSPn" label (e.g. "L-SSP2") for plot titles/legends/annotations - matches
+    the convention used for these marker scenarios outside this repo. Falls back to
+    `scenario_short_name` if not found in `SCENARIO_METADATA`."""
     short = scenario_short_name(base_scenario)
     meta = SCENARIO_METADATA.get(short)
     if meta is None:
         return short
     ssp = meta["scenario"].split(" - ")[0]
-    return f"{short} - {ssp}"
+    return f"{short}-{ssp}"
 
 
 def load_scenarios(scenario_names, scenarios_db_dir):

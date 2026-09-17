@@ -12,6 +12,12 @@ notebooks/archive/
 # Reproducibility-investigation diagnostic scripts - kept locally, not published for now
 notebooks/repro_*.py
 
+# Notebooks are jupytext-paired with their .py counterpart (percent format) - the .py
+# is the tracked source of truth, .ipynb is a regenerable local artifact (`jupytext
+# --to notebook <file>.py`, or opens/syncs automatically in Jupyter with jupytext
+# installed).
+notebooks/*.ipynb
+
 notebooks/.ipynb_checkpoints/
 notebooks/__pycache__/
 
