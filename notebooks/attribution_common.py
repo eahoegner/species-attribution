@@ -206,10 +206,19 @@ def run_scms_to_db(
     max_processes=5,
     batch_size_scenarios=15,
     save_scenarios=True,
+    force_rerun=False,
 ):
     """Run MAGICC on each of `scenario_names` (one run_scms call per scenario, to keep
     run_id 0-based per scenario - no cross-scenario batching ambiguity to recover from
-    later) and save to `out_db_dir`. Returns the OpenSCMDB."""
+    later) and save to `out_db_dir`. Returns the OpenSCMDB.
+
+    `force_rerun=False` (the default) lets `run_scms` skip any (scenario, variable)
+    combination already present in `out_db_dir` for `climate_model` - safe to leave a
+    notebook's call to this at the default and just re-execute it after adding a new
+    basket/scenario/output variable: only the genuinely new work runs, nothing already
+    on disk gets redone. Pass `force_rerun=True` only when the underlying MAGICC config
+    or input emissions actually changed for scenarios already in the db (stale results
+    would otherwise be silently kept)."""
     output_db = OpenSCMDB(backend_data=FeatherDataBackend(), backend_index=FeatherIndexBackend(), db_dir=out_db_dir)
     grouped_output_db = GroupedSaveDB(output_db)
 
@@ -227,7 +236,7 @@ def run_scms_to_db(
             verbose=True,
             progress=True,
             batch_size_scenarios=batch_size_scenarios,
-            force_rerun=True,
+            force_rerun=force_rerun,
         )
 
     if save_scenarios:
@@ -332,6 +341,7 @@ def run_qextra_channels(
     out_db_dir,
     max_processes=5,
     emissions_source_scenario=None,
+    force_rerun=False,
 ):
     """Write per-member FILE_EXTRA_RF input files for each channel in `channel_series`
     (dict: label -> DataFrame indexed by member, columns=years) plus their sum
@@ -339,7 +349,12 @@ def run_qextra_channels(
     resulting scenarios are named f"{driving_scenario_name}_forcing_only_{category}".
     `emissions_source_scenario` (defaults to `driving_scenario_name`) only supplies an
     Emissions| skeleton to drive MAGICC with - QEXTRA overrides the forcing regardless,
-    so it need not match `driving_scenario_name`. Returns the output OpenSCMDB."""
+    so it need not match `driving_scenario_name`. Returns the output OpenSCMDB.
+
+    `force_rerun=False` (the default) skips any category already present in
+    `out_db_dir` for `climate_model` - see `run_scms_to_db`'s docstring, same
+    reasoning. The FILE_EXTRA_RF input files themselves are still (re)written
+    unconditionally either way - that's just a cheap local write, not a MAGICC run."""
     emissions_source_scenario = emissions_source_scenario or driving_scenario_name
     series = dict(channel_series)
     series[combined_label] = sum(series.values())
@@ -388,7 +403,7 @@ def run_qextra_channels(
             db=grouped_output_db,
             verbose=True,
             progress=True,
-            force_rerun=True,
+            force_rerun=force_rerun,
         )
 
     return output_db
@@ -740,6 +755,7 @@ def plot_scenario_year_stacked_bars(
     group_spacing=0.6,
     ylim=None,
     scenario_labels=None,
+    legend_order=None,
 ):
     """Condensed cross-scenario summary plot: one bar group per scenario, one stacked
     bar per year within each group, plus overlay reference markers (e.g. a directly-run
@@ -758,7 +774,13 @@ def plot_scenario_year_stacked_bars(
     keyed those dicts.
     `scenario_labels`: display text for the x-axis annotation under each group, in the
     same order as `scenario_order` - defaults to `scenario_order` itself if not given.
-    `ylim`: optional (ymin, ymax) to use verbatim instead of the auto-padded autoscale."""
+    `ylim`: optional (ymin, ymax) to use verbatim instead of the auto-padded autoscale.
+    `legend_order`: optional explicit top-to-bottom legend label order - defaults to
+    the reverse of `bucket_colors`' own insertion order (i.e. the last-stacked bucket
+    listed first), same as before. Pass this to change the legend without touching
+    `bucket_colors`' insertion order, which also controls the stack draw order (nearest
+    zero = first) - reordering `bucket_colors` to fix the legend would silently flip
+    which bucket sits nearest zero in the bars."""
     fig, ax = plt.subplots(figsize=(max(6, 1.4 * len(scenario_order)), 5), constrained_layout=True)
 
     n_years = len(years)
@@ -865,8 +887,9 @@ def plot_scenario_year_stacked_bars(
         if l not in seen:
             seen[l] = h
     ordered_labels = list(seen.keys())
+    display_order = list(legend_order) if legend_order is not None else list(reversed(ordered_labels))
     ax.legend(
-        [seen[l] for l in reversed(ordered_labels)], list(reversed(ordered_labels)),
+        [seen[l] for l in display_order], display_order,
         loc="upper left", bbox_to_anchor=(1.02, 1.0), fontsize=9, frameon=True,
     )
 

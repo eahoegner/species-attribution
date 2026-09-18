@@ -22,8 +22,8 @@
 # following the real marker scenario unchanged (`..._hold_2023_<basket>`).
 #
 # Baskets: CO2 (Fossil + AFOLU together), CH4, N2O, F-Gases, Montreal Protocol Halogen
-# Gases (via `gcages`' `EMISSIONS_VARIABLES` table - see Step 2), and Residual
-# (everything else: BC, OC, Sulfur, NOx, NH3, CO, VOC).
+# Gases (via `gcages`' `EMISSIONS_VARIABLES` table - see Step 2), Aerosols (BC, OC,
+# Sulfur, NH3), and Other (NOx, CO, VOC - the tropospheric-ozone-forming precursors).
 #
 # Only builds and checks the counterfactual emissions themselves - running MAGICC on
 # them is `102_run_magicc_hold_2023.py`'s job (kept separate so re-plotting/re-checking
@@ -87,8 +87,8 @@ print("year range:", scenarios.columns.min(), "-", scenarios.columns.max())
 # come from `gcages`' own `EMISSIONS_VARIABLES` table (its `rcmip` column groups species
 # under `Emissions|F-Gases|...`/`Emissions|Montreal Gases|...`; its `cmip7_scenariomip`
 # column gives the matching flat variable name used in our own scenario data) - the
-# authoritative source for this grouping, rather than re-deriving it by regex. Residual
-# is everything else actually present in the data (BC, OC, Sulfur, NOx, NH3, CO, VOC).
+# authoritative source for this grouping, rather than re-deriving it by regex. Aerosols
+# (BC, OC, Sulfur, NH3) and Other (NOx, CO, VOC) are whatever's left over.
 
 
 # %%
@@ -111,8 +111,13 @@ ch4_vars = [v for v in ["Emissions|CH4"] if v in variables_present]
 n2o_vars = [v for v in ["Emissions|N2O"] if v in variables_present]
 fgas_vars, mhalo_vars = fgas_and_mhalo_variables(variables_present)
 
-assigned = set(co2_vars) | set(ch4_vars) | set(n2o_vars) | set(fgas_vars) | set(mhalo_vars)
-residual_vars = sorted(v for v in variables_present if v.startswith("Emissions|") and v not in assigned)
+aerosol_vars = [v for v in ["Emissions|BC", "Emissions|OC", "Emissions|Sulfur", "Emissions|NH3"] if v in variables_present]
+
+assigned = set(co2_vars) | set(ch4_vars) | set(n2o_vars) | set(fgas_vars) | set(mhalo_vars) | set(aerosol_vars)
+other_vars = sorted(v for v in variables_present if v.startswith("Emissions|") and v not in assigned)
+"""Everything left over: NOx, CO, VOC - the tropospheric-ozone-forming precursors, as
+opposed to `aerosol_vars`' direct aerosol formers. NOx also forms nitrate aerosol
+(see `004`'s NOX_CHANNELS), but is grouped here with its dominant ozone pathway."""
 
 BASKETS = {
     "CO2": co2_vars,
@@ -120,7 +125,8 @@ BASKETS = {
     "N2O": n2o_vars,
     "F-Gases": fgas_vars,
     "Montreal Halogens": mhalo_vars,
-    "Residual": residual_vars,
+    "Aerosols": aerosol_vars,
+    "Other": other_vars,
 }
 BASKETS = {label: species for label, species in BASKETS.items() if species}
 BASKETS
@@ -177,13 +183,13 @@ BASE_SCENARIOS_FILE = DATA_DIR / "hold_2023_base_scenarios.json"
 BASE_SCENARIOS_FILE.write_text(json.dumps(base_scenarios, indent=2))
 
 # %% [markdown]
-# ## Check: counterfactual emissions time series, all six baskets
+# ## Check: counterfactual emissions time series, all baskets
 #
 # One multi-panel figure per base scenario - one panel per basket, each plotting every
 # variable in that basket twice: solid for the real scenario, dashed for its
 # `_hold_2023_<basket>` counterfactual (same color per variable across the two lines).
-# Large baskets (F-Gases/Montreal Halogens/Residual) skip the per-variable legend - would
-# be unreadable - and just show the solid-vs-dashed convention once, via `LEGEND_MAX_SPECIES`.
+# Large baskets (F-Gases/Montreal Halogens) skip the per-variable legend - would be
+# unreadable - and just show the solid-vs-dashed convention once, via `LEGEND_MAX_SPECIES`.
 
 # %%
 import matplotlib.pyplot as plt  # noqa: E402
@@ -199,9 +205,14 @@ LEGEND_MAX_SPECIES = 6
 
 def plot_basket_timeseries(base_scenario):
     color_cycle = plt.rcParams["axes.prop_cycle"].by_key()["color"]
-    fig, axes = plt.subplots(2, 3, figsize=(16, 8), constrained_layout=True)
+    ncols = 4
+    nrows = -(-len(BASKETS) // ncols)
+    fig, axes = plt.subplots(nrows, ncols, figsize=(4.2 * ncols, 4.2 * nrows), constrained_layout=True)
+    axes = list(axes.flat)
+    for extra_ax in axes[len(BASKETS) :]:
+        extra_ax.set_visible(False)
 
-    for ax, (label, species) in zip(axes.flat, BASKETS.items()):
+    for ax, (label, species) in zip(axes, BASKETS.items()):
         counterfactual_scenario = f"{base_scenario}_hold_2023_{ac.slugify(label)}"
 
         for i, variable in enumerate(species):

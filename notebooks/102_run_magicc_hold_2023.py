@@ -64,10 +64,12 @@ BASE_SCENARIOS = json.loads((DATA_DIR / "hold_2023_base_scenarios.json").read_te
 """Auto-discovered from 101's own manifest - whatever base scenarios 101 actually
 processed, no need to know/hardcode the real names."""
 
-BASKET_LABELS = ["CO2", "CH4", "N2O", "F-Gases", "Montreal Halogens", "Residual"]
+BASKET_LABELS = ["CO2", "CH4", "N2O", "F-Gases", "Montreal Halogens", "Aerosols", "Other"]
 """Must match 101's own BASKETS keys (order doesn't matter) - not re-derived from
 gcages here since running MAGICC only needs each basket's label (for the counterfactual
-scenario name/output db dir), not its member species."""
+scenario name/output db dir), not its member species. Aerosols = BC, OC, Sulfur, NH3;
+Other = NOx, CO, VOC (the tropospheric-ozone-forming precursors) - split from the
+former single "Residual" basket."""
 
 MAGICC_SUPPLY_START_YEAR = 2015
 """Matches the official CMIP7 ScenarioMIP workflow convention (see `002`) - MAGICC's own
@@ -93,11 +95,14 @@ BASKET_OUTPUT_VARIABLES = {
     "N2O": (*CORE_OUTPUT_VARIABLES, "Effective Radiative Forcing|N2O"),
     "F-Gases": (*CORE_OUTPUT_VARIABLES, "Effective Radiative Forcing|F-Gases"),
     "Montreal Halogens": (*CORE_OUTPUT_VARIABLES, "Effective Radiative Forcing|Montreal Protocol Halogen Gases"),
-    "Residual": (
+    "Aerosols": (
         *CORE_OUTPUT_VARIABLES,
         "Effective Radiative Forcing|Aerosols|Direct Effect",
         "Effective Radiative Forcing|Aerosols|Indirect Effect",
         "Effective Radiative Forcing|Black Carbon on Snow",
+    ),
+    "Other": (
+        *CORE_OUTPUT_VARIABLES,
         "Effective Radiative Forcing|Tropospheric Ozone",
     ),
 }
